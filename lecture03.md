@@ -37,5 +37,5 @@
 `exit`で出てから、`$sudo systemctl stop mysqld` でmysqlを停止後のPreview
 ![mysql停止後](image/lecture03/img-6.png)
 
-- Rails の構成管理ツールの名前
+### Rails の構成管理ツールの名前
  ![Bundler](image/lecture03/img-7.png)
