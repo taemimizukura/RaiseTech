@@ -10,4 +10,4 @@
 7. `git push origin git-lecture` GitHubへpushする
 <br>usernameを入力
 <br>passwordを入力
-
+8. GitHubでのPR作成
