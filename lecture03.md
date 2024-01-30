@@ -2,7 +2,7 @@
 ## 手順まとめ
 - サンプルアプリケーションを**GitHub**からclone
 - サンプルアプリケーション内のREADME.mdを読み、ruby、Bundler、Rails、Node、yarn の指定のversionをinstallし、useでversion指定
-- mysqlのセットアップ（容量の確保・MariaDBを削除後install、パスワード変更・socketファイルの場所　→　database.ymlへの書き込み）
+- mysqlのセットアップ（容量の確保・MariaDBを削除後install、パスワード変更・socketファイルの場所　→database.ymlへの書き込み）
 - サンプルアプリケーションの起動、ブラウザで確認
 
 ## 学んだこと、感じたこと
@@ -38,4 +38,4 @@
 ![mysql停止後](image/lecture03/img-6.png)
 
 ### Rails の構成管理ツールの名前
- ![Bundler](image/lecture03/img-7.png)
+- ![Bundler](image/lecture03/img-7.png)
