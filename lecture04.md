@@ -1,4 +1,4 @@
-#Lecture04
+# Lecture04
 ### VPC新規作成
 ![VPC](image/lecture04/img-1.png)
 ![VPCリソースマップ](image/lecture04/img-2.png)
@@ -12,7 +12,7 @@
 ![RDS](image/lecture04/img-5.png)
 ![RDSセキュリティグループ](image/lecture04/img-6.png)
 ![RDSサブネットグループ](image/lecture04/img-7.png)
-サブネットIDは2つともPrivate（ローカル）接続としている
+- サブネットIDは2つともPrivate（ローカル）接続としている
 ![RDSサブネットID1](image/lecture04/img-8.png)
 ![RDSサブネットID2](image/lecture04/img-9.png)
 
