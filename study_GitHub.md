@@ -15,6 +15,8 @@
 `git push origin <ブランチ名>`
 - リモートリポジトリから変更をプル  
 `git pull origin <ブランチ名>`
+- リモートリポジトリから最新の変更をローカルに取得する
+`git fetch origin`
 - 変更をマージ  
 `git merge <ブランチ名>`
 - 変更を元に戻す（リセット）  
