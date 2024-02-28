@@ -10,7 +10,7 @@ mysql-devel（Rubyのmysql2 gemなどでMySQLと連携するプログラムを�
 `sudo yum install mysql-devel`  
 mysql-community-client（MySQLデータベースにアクセスするアプリケーションやツールの実行に必要）  
 `sudo yum install mysql-community-client`  
-GraphicsMagick（画像が表示できなかったため）   
+GraphicsMagick（画像の表示用）   
 `sudo amazon-linux-extras install GraphicsMagick1.3`  
 その他ビルドに必要なパッケージ等
 - config/database.yml 接続先を変更する
