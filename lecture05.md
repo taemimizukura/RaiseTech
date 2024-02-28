@@ -37,9 +37,7 @@ curlを使用しての動作確認：`curl --unix-socket <socketのパス> <URL>
 
 ### nginx＋unicornを連携して動作確認　appleを追加
 ![nginx+unicorn](image/lecture05/img-05.png)
-`sudo tail -n 30 log/unicorn.log`
+`sudo tail -n 30 log/unicorn.log`  
 ![unicorn.log](image/lecture05/img-06.png)
-`sudo tail -n 10 /var/log/nginx/error.log`
+`sudo tail -n 10 /var/log/nginx/error.log`  
 ![nginxエラーログ](image/lecture05/img-07.png)
-
-
