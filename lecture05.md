@@ -40,4 +40,7 @@ curlを使用しての動作確認：`curl --unix-socket <socketのパス> <URL>
 `sudo tail -n 30 log/unicorn.log`  
 ![unicorn.log](image/lecture05/img-06.png)
 `sudo tail -n 10 /var/log/nginx/error.log`  
-![nginxエラーログ](image/lecture05/img-07.png)
+![nginxエラーログ](image/lecture05/img-07.png)  
+nginxとunicornの設定  
+![nginxとunicornの設定](image/lecture05/img-08.png)
+
