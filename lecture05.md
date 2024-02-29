@@ -44,3 +44,14 @@ curlを使用しての動作確認：`curl --unix-socket <socketのパス> <URL>
 - nginxとunicornの設定  
 ![nginxとunicornの設定](image/lecture05/img-08.png)
 
+## ELB 経由で EC2 へ接続
+
+
+
+
+
+## アプリケーションのデータ保存先を S3 に変更
+
+
+
+## インフラ構成図
