@@ -1,4 +1,5 @@
 # Lecture05
+
 ## EC2 上にサンプルアプリケーションをデプロイして、動作確認  　
 - インストールしたもの  
 ruby 3.1.2  
@@ -43,4 +44,6 @@ curlを使用しての動作確認：`curl --unix-socket <socketのパス> <URL>
 ![nginxエラーログ](image/lecture05/img-07.png)  
 - nginxとunicornの設定  
 ![nginxとunicornの設定](image/lecture05/img-08.png)
+
+
 
