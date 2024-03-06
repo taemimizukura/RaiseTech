@@ -68,7 +68,7 @@ curlを使用しての動作確認：```curl --unix-socket <socketのパス> <UR
 ```aws s3 ls raisetech-s3-bucket```
 ![CLI](image/lecture05/img-12_1.png)
 ![メロン](image/lecture05/img-12_2.png)
-- 【EC2→S3に反映】EC2上のREADME.mdをコピーしてS3にアップロードしてみる。→S3を確認  
+- 【EC2→S3に反映】EC2上のREADME.mdをコピーしてS3にアップロードしてみる。→S3を確認  lecture06.md
 ```aws s3 cp README.md s3://raisetech-s3-bucket```
 ![S3](image/lecture05/img-12_3.png)
 - サンプルアプリケーションにao-ringoを追加
