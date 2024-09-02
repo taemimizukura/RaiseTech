@@ -8,7 +8,7 @@
 【Lecture07】3月17日 セキュリティ対策と脆弱性について
 【Lecture08】LiveCodingのみ。課題なし。
 【Lecture09】LiveCodingのみ。課題なし。
-【Lecture10】
+【Lecture10】9月2日　CloudFormationで現在までの環境を自動化する。
 【Lecture11】
 【Lecture12】
 【Lecture13】
