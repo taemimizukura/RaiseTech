@@ -5,28 +5,28 @@
 ![lecture10.yml](lecture10.yml)
 
 ### スタック実行結果
-![スタック](image\lecture10\img-00.png)
+![スタック](image/lecture10/img-00.png)
 
 #### VPC
-![VPC](image\lecture10\img-01.png)
+![VPC](image/lecture10/img-01.png)
 #### EC2
-![EC2](image\lecture10\img-02.png)
+![EC2](image/lecture10/img-02.png)
 #### RDS
-![RDS](image\lecture10\img-03.png)
+![RDS](image/lecture10/img-03.png)
 #### ELB
-![ELB](image\lecture10\img-04.png)
+![ELB](image/lecture10/img-04.png)
 #### ターゲットグループ
-![ターゲットグループ](image\lecture10\img-05.png)
+![ターゲットグループ](image/lecture10/img-05.png)
 #### S3
-![s3](image\lecture10\img-06.pn
+![s3](image/lecture10/img-06.pn
 #### EC2へ接続確認
-![EC2接続](image\lecture10\img-07.png)
+![EC2接続](image/lecture10/img-07.png)
 #### RDSへ接続確認
-![RDS接続](image\lecture10\img-08.png)
+![RDS接続](image/lecture10/img-08.png)
 #### サンプルアプリの保存先をS3にして、画像をアップロード
-![サンプルアプリに画像アップロード](image\lecture10\img-09.png)
+![サンプルアプリに画像アップロード](image/lecture10/img-09.png)
 #### S3に保存された画像の確認
-![S3の画像確認](image\lecture10\img-10.png)
+![S3の画像確認](image/lecture10/img-10.png)
 
 ##### 感想・学んだこと
 前回までのマネジメントコンソールでの操作ではクリックだけでできていた部分が多くあり、一つ一つ読み解いてコード化することで理解が深まりました。
