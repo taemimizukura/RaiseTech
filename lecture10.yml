@@ -385,3 +385,4 @@ Resources:
         - !Ref PrivateSubnet01
         - !Ref PrivateSubnet02
       DBSubnetGroupName: !Sub ${NameBase}-subnet-group-${AWS::StackName}
+      
