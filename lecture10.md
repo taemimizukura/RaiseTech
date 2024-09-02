@@ -2,7 +2,7 @@
 ## CloudFormationを利用して、現在までに作った環境をコード化する
 
 ### コード化したyml形式のスタックファイル
-![lecture10.yml](/lecture10.yml)
+[lecture10.yml](/lecture10.yml)
 
 ### スタック実行結果
 ![スタック](image/lecture10/img-00.png)
