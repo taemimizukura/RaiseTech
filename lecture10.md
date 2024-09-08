@@ -33,6 +33,9 @@
 #### S3bucket
 ![S3](image/lecture10/img-08.png)
 
+#### 画像確認
+![画像](image/lecture10/img-09.png)
+
 #### AWS CLI でS3Bucketと画像ファイルの確認
 EC2にAWS CLI をインストール
 ```bash
@@ -41,7 +44,7 @@ unzip -o awscliv2.zip
 sudo ./aws/install
 ```
 S3Bucketに画像が保存されていることを確認↓
-![AWS CLIで確認](image/lecture10/img-09.png)
+![AWS CLIで確認](image/lecture10/img-10.png)
 
 ### 感想・学んだこと
 前回までのマネジメントコンソールでの操作ではクリックだけでできていた部分が多くあり、一つ一つ読み解いてコード化することで時間がかかりましたが、少し理解が深まったと思います。
