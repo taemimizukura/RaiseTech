@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  NameBase:
+    Description: This is the base name.
+    Type: String
+    Default: raisetechlec10
+  
+  MyKeyPair:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+  
+  MyIP:
+    Description: IP address allowed to access EC2
+    Type: String
+
+Resources:
+#--------------------------------------------------------#         
+# EC2
+#--------------------------------------------------------#
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref MyKeyPair
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      ImageId: ami-0d889f77081190db1
+      SubnetId: !ImportValue PublicSubnet01
+      IamInstanceProfile: !Ref InstanceProfile
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo yum update -y
+          sudo yum install git -y
+          sudo amazon-linux-extras install nginx1
+          sudo systemctl start nginx
+          sudo systemctl enable nginx
+      Tags:
+        - Key: Name
+          Value: !Sub ec2-${NameBase}
+
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for EC2
+      GroupName: !Sub ${NameBase}-ec2-sg
+      VpcId: !ImportValue MyVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ELBSecurityGroup 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Sub ${MyIP}/32
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000 
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-ec2-sg
+
+#--------------------------------------------------------#         
+# ALB(Application Load Balancer)
+#--------------------------------------------------------#
+  MyALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${NameBase}-alb
+      Subnets:
+        - !ImportValue PublicSubnet01
+        - !ImportValue PublicSubnet02
+      SecurityGroups:
+        - !Ref ELBSecurityGroup
+      Scheme: internet-facing
+      Type: application
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-alb
+
+  MyTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub ${NameBase}-tg
+      Port: 80
+      Protocol: HTTP
+      VpcId: !ImportValue MyVpc
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: traffic-port
+      HealthCheckPath: /
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      TargetType: instance
+      Targets:
+        - Id: !Ref MyEC2Instance
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-tg
+
+  MyALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref MyTargetGroup
+      LoadBalancerArn: !Ref MyALB
+      Port: 80
+      Protocol: HTTP
+
+  ELBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for ELB(Elastic Load Balancer)
+      GroupName: !Sub ${NameBase}-elb-sg
+      VpcId: !ImportValue MyVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-elb-sg
+#--------------------------------------------------------#         
+# IAM Role
+#--------------------------------------------------------#
+  S3FullAccessRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: S3FullAccessRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service: 'ec2.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Tags:
+        - Key: Name
+          Value: S3FullAccessRole
+
+  InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Roles:
+        - Ref: S3FullAccessRole
+#--------------------------------------------------------#         
+# Outputs
+#--------------------------------------------------------#
+Outputs:
+  EC2SecurityGroup:
+    Value: !Ref EC2SecurityGroup
+    Export:
+      Name: EC2SecurityGroup
+

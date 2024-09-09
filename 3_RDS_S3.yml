@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  NameBase:
+    Description: This is the base name.
+    Type: String
+    Default: raisetechlec10
+
+  RDSUsername:
+    Type: String
+    Default: dbadmin
+    NoEcho: true #イベントログに記録しない
+    MinLength: 4
+    MaxLength: 16
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*" #最初の文字は必ず英字（a-z または A-Z）続く文字は英字または数字いずれでも良い。4～16文字
+  
+  RDSPassword:
+    Type: String
+    Default: dbpassword
+    NoEcho: true
+    MinLength: 8
+    MaxLength: 20
+    AllowedPattern: "[a-zA-Z0-9]*" #最初の文字は英字または数字のいずれでも良い。8～20文字
+
+Resources:
+  #--------------------------------------------------------#         
+  # RDS（Relational Data Base）
+  #--------------------------------------------------------#
+  MyRDS:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${NameBase}-rds
+      DBName: dblec10
+      Engine: mysql
+      MasterUsername: !Ref RDSUsername
+      MasterUserPassword: !Ref RDSPassword
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      AvailabilityZone: ap-northeast-1a
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      MultiAZ: false
+      PubliclyAccessible: false
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-rds
+    DeletionPolicy: Delete
+
+  RDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for RDS
+      SubnetIds:
+        - !ImportValue PrivateSubnet01
+        - !ImportValue PrivateSubnet02
+      DBSubnetGroupName: !Sub ${NameBase}-subnet-group-${AWS::StackName}
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for RDS(Relational Database Service)
+      GroupName: !Sub ${NameBase}-rds-sg
+      VpcId: !ImportValue MyVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !ImportValue EC2SecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-rds-sg
+  #--------------------------------------------------------#         
+  # S3 Bucket
+  #--------------------------------------------------------#
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${NameBase}-bucket
+      AccessControl: Private #バケット全体がデフォルトでプライベート
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: #すべてのヘッダーを許可
+              - "*"
+            AllowedMethods: #GETメソッドのみ許可
+              - GET
+            AllowedOrigins:
+              - "*"
+            MaxAge: 3000
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+    DeletionPolicy: Delete
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${NameBase}-bucket/*
+
