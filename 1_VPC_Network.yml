@@ -169,3 +169,4 @@ Outputs:
     Value: !Ref PrivateSubnet02
     Export:
       Name: PrivateSubnet02
+
