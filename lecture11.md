@@ -5,7 +5,7 @@ ServerSpec公式　https://serverspec.org/
 ```
 sudo gem install bundler  
 sudo gem install serverspec  
-mkdir serverspec`  
+mkdir serverspec  
 cd serverspec/  
 serverspec-init
 ```
