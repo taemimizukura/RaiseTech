@@ -8,7 +8,7 @@
 【Lecture08】LiveCodingのみ。課題なし。<br>
 【Lecture09】LiveCodingのみ。課題なし。<br>
 【Lecture10】9月2日　CloudFormationで現在までの環境を自動化する。<br>
-【Lecture11】<br>
+【Lecture11】9月22日　ServerSpecを使用したテストの実行<br>
 【Lecture12】<br>
 【Lecture13】<br>
 【Lecture14】<br>
