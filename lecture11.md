@@ -15,7 +15,9 @@ serverspec-init
 ![ディレクトリ構成](image/lecture11/img-01.png)
 
 ### sample_spec.rb を編集してテスト内容を入力  
-`vim spec/localhost/sample_spec.rb`  
+```bash
+vim spec/localhost/sample_spec.rb
+```
 ```ruby
 require 'spec_helper'
 
