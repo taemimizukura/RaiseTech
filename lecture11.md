@@ -2,7 +2,7 @@
 ## ServerSpecのテストが成功すること
 ### ServerSpecのインストール
 ServerSpec公式　https://serverspec.org/  
-```
+```bash
 sudo gem install bundler  
 sudo gem install serverspec  
 mkdir serverspec  
@@ -16,7 +16,7 @@ serverspec-init
 
 ### sample_spec.rb を編集してテスト内容を入力  
 `vim spec/localhost/sample_spec.rb`  
-
+```ruby
 require 'spec_helper'
 
 listen_port = 80
@@ -61,7 +61,7 @@ end
 describe command('yarn -v') do  
   its(:stdout) { should include '1.22.19' }  
 end  
-
+```
 
 ### 実行結果
 ![テスト実行結果](image/lecture11/img-02.png)
