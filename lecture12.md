@@ -18,32 +18,12 @@ EC2からGitHubのリポジトリをSSHでcloneする
 ```bash
 git clone git@github.com:taemimizukura/RaiseTech.git
 ```
-### 3. config.ymlを書き換える
+### 3. config.ymlを指定のものに書き換える
 https://github.com/MasatoshiMizumoto/raisetech_documents/tree/main/aws/samples/circleci
 ```bash
  vim /home/ec2-user/.circleci/config.yml
 ```
-```yml
-version: 2.1
-orbs:
-  python: circleci/python@2.0.3
-jobs:
-  cfn-lint:
-    executor: python/default
-    steps:
-      - checkout
-      - run: pip install cfn-lint
-      - run:
-          name: run cfn-lint
-          command: |
-            cfn-lint -i W3002-i -t cloudformation/*.yml
-
-workflows:
-  raisetech:
-    jobs:
-      - cfn-lint
-```
-### 4. CircleCI CLI を使ったバリデーション
+### 4. CircleCI CLI を使ったバリデーション  
 CircleCI CLIのインストール
 ```bash
 curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
@@ -53,9 +33,9 @@ comfig.ymlのバリデーション
 
 ### 5. GitHubにpushして、CircleCIを確認
 Warnig発生
-![CircleCIの確認](image/lecture12/img-02.png)
+![CircleCI警告発生](image/lecture12/img-02.png)
 config.yml再編集  
-今回は、警告コード　W1011、W3010、W3045 を検知対象外にすることでWarnigをなくす。
+今回は、警告コード　W1011、W3010、W3045 を検知対象外に追加することでWarnigをなくす。
 ```yml
 version: 2.1
 orbs:
@@ -81,6 +61,8 @@ W3002	プロパティがパッケージコマンドでのみ動作するよう�
 W1011	シークレットのパラメータをREFする代わりに、動的参照を使用する  
 W3010	可用性ゾーンのプロパティはハードコードすべきではない  
 W3045	S3バケットへのアクセス制御はバケットポリシーで行う必要があります  
+### 6. 再度GitHubにpushして、CircleCIを確認
+![再度CircleCIOK](image/lecture12/img-03.png)
 
 ## 感想 
 いつもはローカル環境からpushしていますが、CircleCI CLIでバリデーションを行うため、EC2にリポジトリをcloneして、config.ymlの編集、pushを行ったところかなり難しく感じました。  
