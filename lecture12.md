@@ -54,6 +54,7 @@ comfig.ymlのバリデーション
 ### 5. GitHubにpushして、CircleCIを確認
 Warnig発生
 ![CircleCIの確認](image/lecture12/img-02.png)
+config.yml再編集  
 今回は、警告コード　W1011、W3010、W3045 を検知対象外にすることでWarnigをなくす。
 ```yml
 version: 2.1
