@@ -28,7 +28,7 @@ CircleCI CLIのインストール
 ```bash
 curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
 ```
-comfig.ymlのバリデーション
+comfig.ymlのバリデーション  
 ![バリデーション](image/lecture12/img-01.png)
 
 ### 5. GitHubにpushして、CircleCIを確認
