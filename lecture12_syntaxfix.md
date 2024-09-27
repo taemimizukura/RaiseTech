@@ -11,7 +11,7 @@ Select関数でインデックス指定する
 ![AvailabilityZone](image/lecture12/img-04.png)
 
 2. W1011 シークレットのパラメータに動的参照を使う  
-secretsmanagerを使用して、RDSのパスワードを保存したので、Parametersからは削除 
+secretsmanagerを使用してRDSのパスワードを保存したので、Parametersからは削除 
 ![Parameters](image/lecture12/img-05.png) 
 secretsmanagerからパスワードを呼び出す  
 ![secretsmanager](image/lecture12/img-06.png)
@@ -42,7 +42,7 @@ EC2へ接続
 version: 2.1
 orbs:
   python: circleci/python@2.0.3
-の結果の結果
+
 jobs:
   cfn-lint:
     executor: python/default
