@@ -12,14 +12,6 @@ Parameters:
     MinLength: 4
     MaxLength: 16
     AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*" #最初の文字は必ず英字（a-z または A-Z）続く文字は英字または数字いずれでも良い。4～16文字
-  
-  RDSPassword:
-    Type: String
-    Default: dbpassword
-    NoEcho: true
-    MinLength: 8
-    MaxLength: 20
-    AllowedPattern: "[a-zA-Z0-9]*" #最初の文字は英字または数字のいずれでも良い。8～20文字
 
 Resources:
   #--------------------------------------------------------#         
@@ -32,10 +24,12 @@ Resources:
       DBName: dblec10
       Engine: mysql
       MasterUsername: !Ref RDSUsername
-      MasterUserPassword: !Ref RDSPassword
+      MasterUserPassword: "{{resolve:secretsmanager:MyRDSPassword:SecretString:password}}"
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: !Select
+        - 0                          # 指定したregionの最初のaz
+        - Fn::GetAZs: !Ref AWS::Region
       VPCSecurityGroups:
         - !Ref RDSSecurityGroup
       DBSubnetGroupName: !Ref RDSSubnetGroup
@@ -81,7 +75,6 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${NameBase}-bucket
-      AccessControl: Private #バケット全体がデフォルトでプライベート
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders: #すべてのヘッダーを許可
@@ -108,5 +101,7 @@ Resources:
           - Effect: Allow
             Principal: "*"
             Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::${NameBase}-bucket/*
+            Resource: !Sub "arn:${AWS::Partition}:s3:::${NameBase}-bucket/*"
+
+
 
