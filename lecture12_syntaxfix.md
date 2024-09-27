@@ -1,5 +1,5 @@
 # Lecture12 追加修正分提出
-circleCIで警告が出ていたCloudformationのスタックの構文を修正しました。  
+circleCIで警告が出ていたCloudformationのスタックの構文を修正し、再度CircleCIを実行しました。 
 ## 修正した警告箇所  
 1. W3010 AvailabilityZoneのハードコーディングを避ける  
 Fn::GetAZs＝指定したリージョンのAvailabilityZoneをすべて返す  
