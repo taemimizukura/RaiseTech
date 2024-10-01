@@ -19,6 +19,7 @@ jobs:
       - image: circleci/python:3.8
     steps:
       - checkout
+      - aws-cli/install
       - run:
           name: Deploy VPC CloudFormation Stack
           command: |
@@ -46,6 +47,7 @@ jobs:
       - image: circleci/python:3.8
     steps:
       - checkout
+      - aws-cli/install
       - run:
           name: Deploy RDS and S3 CloudFormation Stack
           command: |
