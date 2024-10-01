@@ -8,27 +8,61 @@ jobs:
     steps:
       - checkout
       - run: pip install cfn-lint
-
-      # cloudformation フォルダのチェック
       - run:
-          name: run cfn-lint for cloudformation
+          name: Run cfn-lint for CloudFormation
           command: |
-            cfn-lint -i W3002 -t cloudformation/*.yml
+            cfn-lint -i W3002 -t cloudformation/*.yml  # 構文チェック
 
-      # cloudformation_old フォルダのチェック
+  deploy_vpc:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
       - run:
-          name: run cfn-lint for cloudformation_old
+          name: Deploy VPC CloudFormation Stack
           command: |
-            cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
+            aws cloudformation deploy \
+              --template-file cloudformation/1_VPC_Network_v2.yml \
+              --stack-name ${VPC_STACK_NAME} \
+              --capabilities CAPABILITY_NAMED_IAM  # IAMリソースの作成や変更を許可
+
+  deploy_ec2_alb:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Deploy EC2 and ALB CloudFormation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file cloudformation/2_EC2_ALB_v2.yml \
+              --stack-name ${EC2_STACK_NAME} \
+              --capabilities CAPABILITY_NAMED_IAM
+
+  deploy_rds_s3:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Deploy RDS and S3 CloudFormation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file cloudformation/3_RDS_S3_v2.yml \
+              --stack-name ${RDS_STACK_NAME} \
+              --capabilities CAPABILITY_NAMED_IAM  
 
 workflows:
-  raisetech:
+  version: 2
+  deploy:
     jobs:
       - cfn-lint
-
-
-
-
-
-
-
+      - deploy_vpc:
+          requires:
+            - cfn-lint
+      - deploy_ec2_alb:
+          requires:
+            - deploy_vpc
+      - deploy_rds_s3:
+          requires:
+            - deploy_ec2_alb
