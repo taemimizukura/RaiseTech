@@ -27,6 +27,7 @@ jobs:
               --template-file cloudformation/1_VPC_Network_v2.yml \
               --stack-name ${VPC_STACK_NAME} \
               --capabilities CAPABILITY_NAMED_IAM  # IAMリソースの作成や変更を許可
+              --region ${AWS_REGION}
 
   deploy_ec2_alb:
     docker:
@@ -41,6 +42,7 @@ jobs:
               --template-file cloudformation/2_EC2_ALB_v2.yml \
               --stack-name ${EC2_STACK_NAME} \
               --capabilities CAPABILITY_NAMED_IAM
+              --region ${AWS_REGION}
 
   deploy_rds_s3:
     docker:
@@ -54,7 +56,8 @@ jobs:
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name ${RDS_STACK_NAME} \
-              --capabilities CAPABILITY_NAMED_IAM  
+              --capabilities CAPABILITY_NAMED_IAM
+              --region ${AWS_REGION}
 
 workflows:
   version: 2
