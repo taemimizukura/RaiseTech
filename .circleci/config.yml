@@ -21,12 +21,16 @@ jobs:
       - checkout
       - aws-cli/install
       - run:
+          name: Debug AWS_REGION
+          command: |
+            echo "AWS_REGION is set to: ${AWS_REGION}"
+      - run:
           name: Deploy VPC CloudFormation Stack
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/1_VPC_Network_v2.yml \
               --stack-name ${VPC_STACK_NAME} \
-              --capabilities CAPABILITY_NAMED_IAM  # IAMリソースの作成や変更を許可
+              --capabilities CAPABILITY_NAMED_IAM \
               --region ${AWS_REGION}
 
   deploy_ec2_alb:
@@ -36,12 +40,16 @@ jobs:
       - checkout
       - aws-cli/install 
       - run:
+          name: Debug AWS_REGION
+          command: |
+            echo "AWS_REGION is set to: ${AWS_REGION}"
+      - run:
           name: Deploy EC2 and ALB CloudFormation Stack
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/2_EC2_ALB_v2.yml \
               --stack-name ${EC2_STACK_NAME} \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --region ${AWS_REGION}
 
   deploy_rds_s3:
@@ -51,12 +59,16 @@ jobs:
       - checkout
       - aws-cli/install
       - run:
+          name: Debug AWS_REGION
+          command: |
+            echo "AWS_REGION is set to: ${AWS_REGION}"
+      - run:
           name: Deploy RDS and S3 CloudFormation Stack
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name ${RDS_STACK_NAME} \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --region ${AWS_REGION}
 
 workflows:
@@ -72,4 +84,4 @@ workflows:
             - deploy_vpc
       - deploy_rds_s3:
           requires:
-            - deploy_ec2_alb ##
+            - deploy_ec2_alb
