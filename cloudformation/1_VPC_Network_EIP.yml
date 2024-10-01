@@ -29,7 +29,7 @@ Resources:
         - 0
         - Fn::GetAZs: !Ref AWS::Region
       CidrBlock: 10.0.0.0/20
-      MapPublicIpOnLaunch: true  #パブリックIP自動割り当て
+      MapPublicIpOnLaunch: false  # EIPを使用する
       VpcId: !Ref MyVpc
       Tags:
         - Key: Name
@@ -43,7 +43,7 @@ Resources:
         - 1                        # 指定したregionの2番目のaz
         - Fn::GetAZs: !Ref AWS::Region
       CidrBlock: 10.0.16.0/20
-      MapPublicIpOnLaunch: true    #パブリックIP自動割り当て
+      MapPublicIpOnLaunch: false  # EIPを使用する
       VpcId: !Ref MyVpc
       Tags:
         - Key: Name

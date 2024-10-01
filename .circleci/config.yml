@@ -28,7 +28,7 @@ jobs:
           name: Deploy VPC CloudFormation Stack
           command: |
             aws cloudformation deploy \
-              --template-file cloudformation/1_VPC_Network_v2.yml \
+              --template-file cloudformation/1_VPC_Network_EIP.yml \
               --stack-name ${VPC_STACK_NAME} \
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} \
@@ -48,7 +48,7 @@ jobs:
           name: Deploy EC2 and ALB CloudFormation Stack
           command: |
             aws cloudformation deploy \
-              --template-file cloudformation/2_EC2_ALB_v2.yml \
+              --template-file cloudformation/2_EC2_ALB_EIP.yml \
               --stack-name ${EC2_STACK_NAME} \
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} \
