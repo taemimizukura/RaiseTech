@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  python: circleci/python@2.0.3
-  aws-cli: circleci/aws-cli@2.0.0
+  python: circleci/python@2.1.1
+  aws-cli: circleci/aws-cli@5.1.0
 
 jobs:
   cfn-lint:
@@ -16,33 +16,42 @@ jobs:
 
   deploy_cloudformation:
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.7
     steps:
       - checkout
       - aws-cli/setup
       - run:
           name: Deploy all CloudFormation Stacks
           command: |
-            set -x
             aws cloudformation deploy \
               --template-file cloudformation/1_VPC_Network_EIP.yml \
               --stack-name Lec13-VPC && \
-
             aws cloudformation deploy \
               --template-file cloudformation/2_EC2_ALB_EIP.yml \
               --stack-name Lec13-EC2 \
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} && \
-
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name Lec13-RDS
 
+  run_ansible_playbook:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Run Ansible Playbook
+          command: |
+            ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
+
 workflows:
-  version: 2
   deploy:
     jobs:
       - cfn-lint
       - deploy_cloudformation:
           requires:
             - cfn-lint
+      - run_ansible_playbook:  # Ansible Playbookのジョブを追加
+          requires:
+            - deploy_cloudformation  # deploy_cloudformationの後に実行される
