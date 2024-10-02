@@ -14,30 +14,50 @@ jobs:
           command: |
             cfn-lint -i W3002 -t cloudformation/*.yml  # 構文チェック
 
-  deploy_cloudformation:
+  deploy_vpc:
     docker:
-      - image: cmgi/python:3.7
+      - image: python:3.7
     steps:
       - checkout
       - aws-cli/setup
       - run:
-          name: Deploy all CloudFormation Stacks
+          name: Deploy VPC
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/1_VPC_Network_EIP.yml \
-              --stack-name Lec13-VPC && \
+              --stack-name Lec13-VPC
+
+  deploy_ec2_alb:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - aws-cli/setup
+      - run:
+          name: Deploy EC2 ALB
+          command: |
             aws cloudformation deploy \
               --template-file cloudformation/2_EC2_ALB_EIP.yml \
               --stack-name Lec13-EC2 \
               --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} && \
+              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
+
+  deploy_rds:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - aws-cli/setup
+      - run:
+          name: Deploy RDS
+          command: |
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name Lec13-RDS
 
   run_ansible_playbook:
     docker:
-      - image: circleci/python:3.7
+      - image: python:3.7
     steps:
       - checkout
       - run:
@@ -49,9 +69,15 @@ workflows:
   deploy:
     jobs:
       - cfn-lint
-      - deploy_cloudformation:
+      - deploy_vpc:
           requires:
             - cfn-lint
+      - deploy_ec2_alb:
+          requires:
+            - deploy_vpc
+      - deploy_rds:
+          requires:
+            - deploy_ec2_alb
       - run_ansible_playbook:
           requires:
-            - deploy_cloudformation  # deploy_cloudformationの後に実行される
+            - deploy_rds
