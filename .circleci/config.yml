@@ -52,6 +52,6 @@ workflows:
       - deploy_cloudformation:
           requires:
             - cfn-lint
-      - run_ansible_playbook:  # Ansible Playbookのジョブを追加
+      - run_ansible_playbook:
           requires:
             - deploy_cloudformation  # deploy_cloudformationの後に実行される
