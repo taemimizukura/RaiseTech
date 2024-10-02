@@ -19,25 +19,25 @@ jobs:
       - image: circleci/python:3.8
     steps:
       - checkout
-      - aws-cli/install
+      - aws-cli/setup
       - run:
           name: Deploy all CloudFormation Stacks
           command: |
             set -x
-            aws cloudformation deploy
-              --template-file cloudformation/1_VPC_Network_EIP.yml
-              --stack-name ${VPC_STACK_NAME}
-              --region ${AWS_REGION} 
-            aws cloudformation deploy
-              --template-file cloudformation/2_EC2_ALB_EIP.yml
-              --stack-name ${EC2_STACK_NAME}
-              --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
-              --region ${AWS_REGION}
-            aws cloudformation deploy
-              --template-file cloudformation/3_RDS_S3_v2.yml
+            aws cloudformation deploy \
+              --template-file cloudformation/1_VPC_Network_EIP.yml \
+              --stack-name ${VPC_STACK_NAME} && \
+
+            aws cloudformation deploy \
+              --template-file cloudformation/2_EC2_ALB_EIP.yml \
+              --stack-name ${EC2_STACK_NAME} \
+              --capabilities CAPABILITY_NAMED_IAM \
+              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} && \
+
+            aws cloudformation deploy \
+              --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name ${RDS_STACK_NAME}
-              --region ${AWS_REGION}
+
 workflows:
   version: 2
   deploy:
