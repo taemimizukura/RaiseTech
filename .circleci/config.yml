@@ -14,7 +14,7 @@ jobs:
           command: |
             cfn-lint -i W3002 -t cloudformation/*.yml  # 構文チェック
 
-  deploy_all_stacks:
+  deploy_cloudformation:
     docker:
       - image: circleci/python:3.8
     steps:
@@ -26,23 +26,23 @@ jobs:
             set -x
             aws cloudformation deploy \
               --template-file cloudformation/1_VPC_Network_EIP.yml \
-              --stack-name ${VPC_STACK_NAME} && \
+              --stack-name Lec13-VPC && \
 
             aws cloudformation deploy \
               --template-file cloudformation/2_EC2_ALB_EIP.yml \
-              --stack-name ${EC2_STACK_NAME} \
+              --stack-name Lec13-EC2 \
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP} && \
 
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
-              --stack-name ${RDS_STACK_NAME}
+              --stack-name Lec13-RDS
 
 workflows:
   version: 2
   deploy:
     jobs:
       - cfn-lint
-      - deploy_all_stacks:
+      - deploy_cloudformation:
           requires:
             - cfn-lint
