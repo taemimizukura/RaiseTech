@@ -16,7 +16,7 @@ jobs:
 
   deploy_cloudformation:
     docker:
-      - image: circleci/python:3.7
+      - image: cmgi/python:3.7
     steps:
       - checkout
       - aws-cli/setup

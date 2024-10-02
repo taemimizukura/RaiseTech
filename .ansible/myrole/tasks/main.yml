@@ -1,0 +1,9 @@
+---
+- hosts: target
+  become: true
+  tasks:
+    - name: Install git
+      ansible.builtin.yum:
+        name: git
+        state: present
+
