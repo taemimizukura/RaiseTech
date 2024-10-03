@@ -46,10 +46,9 @@ jobs:
           command: pip install ansible
       - run:
           name: Run Ansible Playbook
-          command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
+          command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
 
 workflows:
-  version: 2
   build:
     jobs:
       - cfn-lint
