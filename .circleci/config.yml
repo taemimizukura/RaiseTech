@@ -13,7 +13,7 @@ jobs:
           name: Run cfn-lint for CloudFormation
           command: cfn-lint -i W3002 -t cloudformation/*.yml
 
-  deploy:
+  deploy_stack:
     docker:
       - image: python:3.7
     steps:
@@ -46,12 +46,10 @@ jobs:
           command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
 
 workflows:
-  version: 2
-  deploy:
+  deploy_workflow:
     jobs:
       - cfn-lint
-      - deploy:
-          name: Deploy CloudFormation Stacks
+      - deploy_stack:
           requires: [cfn-lint]
       - run_ansible_playbook:
-          requires: [deploy]
+          requires: [deploy_stack]
