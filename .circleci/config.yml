@@ -11,46 +11,27 @@ jobs:
       - run: pip install cfn-lint
       - run:
           name: Run cfn-lint for CloudFormation
-          command: |
-            cfn-lint -i W3002 -t cloudformation/*.yml  # 構文チェック
+          command: cfn-lint -i W3002 -t cloudformation/*.yml
 
-  deploy_vpc:
+  deploy:
     docker:
       - image: python:3.7
     steps:
       - checkout
       - aws-cli/setup
       - run:
-          name: Deploy VPC
+          name: Deploy CloudFormation Stacks
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/1_VPC_Network_EIP.yml \
               --stack-name Lec13-VPC
 
-  deploy_ec2_alb:
-    docker:
-      - image: python:3.7
-    steps:
-      - checkout
-      - aws-cli/setup
-      - run:
-          name: Deploy EC2 ALB
-          command: |
             aws cloudformation deploy \
               --template-file cloudformation/2_EC2_ALB_EIP.yml \
               --stack-name Lec13-EC2 \
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
 
-  deploy_rds:
-    docker:
-      - image: python:3.7
-    steps:
-      - checkout
-      - aws-cli/setup
-      - run:
-          name: Deploy RDS
-          command: |
             aws cloudformation deploy \
               --template-file cloudformation/3_RDS_S3_v2.yml \
               --stack-name Lec13-RDS
@@ -62,22 +43,15 @@ jobs:
       - checkout
       - run:
           name: Run Ansible Playbook
-          command: |
-            ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
+          command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
 
 workflows:
+  version: 2
   deploy:
     jobs:
       - cfn-lint
-      - deploy_vpc:
-          requires:
-            - cfn-lint
-      - deploy_ec2_alb:
-          requires:
-            - deploy_vpc
-      - deploy_rds:
-          requires:
-            - deploy_ec2_alb
+      - deploy:
+          name: Deploy CloudFormation Stacks
+          requires: [cfn-lint]
       - run_ansible_playbook:
-          requires:
-            - deploy_rds
+          requires: [deploy]

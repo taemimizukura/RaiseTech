@@ -1,9 +1,77 @@
----
-- hosts: target
+--- 
+# tasks file for myrole
+- name: Install for EC2
+  hosts: target
+  vars_files:
+    - ../vars/main.yml
   become: true
   tasks:
-    - name: Install git
-      ansible.builtin.yum:
+    - name: Update the system
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install Git
+      yum:
         name: git
         state: present
 
+    - name: Clone the repository
+      git:
+        repo: 'https://github.com/yuta-ushijima/raisetech-live8-sample-app.git'
+        dest: '/home/ec2-user/raisetech-live8-sample-app/'
+
+    - name: Install package
+      yum:
+        name:
+          - git
+          - gcc
+          - make
+          - patch
+          - readline-devel
+          - zlib-devel
+          - bzip2-devel
+          - libffi-devel
+          - ImageMagick
+        state: present
+
+    - name: Clone rbenv repository for
+      git:
+        repo: 'https://github.com/rbenv/rbenv.git'
+        dest: /home/ec2-user/.rbenv
+        version: master
+
+    - name: Add rbenv to PATH in .bashrc
+      lineinfile:
+        path: /home/ec2-user/.bashrc
+        insertafter: EOF      #最終行に挿入
+        line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+
+    - name: Add rbenv init to .bashrc for
+      lineinfile:
+        path: /home/ec2-user/.bashrc
+        insertafter: EOF
+        line: 'eval "$(rbenv init -)"'
+
+    - name: Clone ruby-build repository
+      git:
+        repo: 'https://github.com/rbenv/ruby-build.git'
+        dest: /home/ec2-user/.rbenv/plugins/ruby-build
+        version: master
+
+    - name: Source .bashrc for ec2-user to apply changes
+      shell: source /home/ec2-user/.bashrc
+      args:
+        executable: /bin/bash
+
+    - name: Install Ruby 3.2.3 using rbenv
+      command: /home/ec2-user/.rbenv/bin/rbenv install 3.2.3
+
+    - name: Install Bundler using rbenv
+      command: /home/ec2-user/.rbenv/shims/gem install bundler
+
+    - name: Bundle install
+      command: bundle install
+    
+    - name: sample-app deploy
+      command: bin dev
