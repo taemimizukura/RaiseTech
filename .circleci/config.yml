@@ -49,12 +49,11 @@ jobs:
           command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini myrole/tasks/main.yml
 
 workflows:
+  version: 2
   build:
     jobs:
       - cfn-lint
       - deploy_cloudformation:
-          name: Deploy CloudFormation Stacks
           requires: [cfn-lint]
       - run_ansible_playbook:
           requires: [deploy_cloudformation]
- 
