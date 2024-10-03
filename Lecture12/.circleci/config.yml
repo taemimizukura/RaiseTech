@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  python: circleci/python@2.0.3
+
+jobs:
+  cfn-lint:
+    executor: python/default
+    steps:
+      - checkout
+      - run: pip install cfn-lint
+
+      # cloudformation フォルダのチェック
+      - run:
+          name: run cfn-lint for cloudformation
+          command: |
+            cfn-lint -i W3002 -t cloudformation/*.yml
+
+      # cloudformation_old フォルダのチェック
+      - run:
+          name: run cfn-lint for old_cloudformation
+          command: |
+            cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
+
+workflows:
+  raisetech:
+    jobs:
+      - cfn-lint

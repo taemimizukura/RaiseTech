@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
-  python: circleci/python@2.0.3
+  python: circleci/python@2.1.1
+  aws-cli: circleci/aws-cli@5.1.0
 
 jobs:
   cfn-lint:
@@ -8,20 +9,50 @@ jobs:
     steps:
       - checkout
       - run: pip install cfn-lint
-
-      # cloudformation フォルダのチェック
       - run:
-          name: run cfn-lint for cloudformation
-          command: |
-            cfn-lint -i W3002 -t cloudformation/*.yml
+          name: Run cfn-lint for CloudFormation
+          command: cfn-lint -i W3002 -t cloudformation/*.yml
 
-      # cloudformation_old フォルダのチェック
+  deploy_cloudformation:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - aws-cli/setup
       - run:
-          name: run cfn-lint for old_cloudformation
+          name: Deploy CloudFormation Stacks
           command: |
-            cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
+            aws cloudformation deploy \
+              --template-file cloudformation/1_VPC_Network_EIP.yml \
+              --stack-name Lec13-VPC
+
+            aws cloudformation deploy \
+              --template-file cloudformation/2_EC2_ALB_EIP.yml \
+              --stack-name Lec13-EC2 \
+              --capabilities CAPABILITY_NAMED_IAM \
+              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
+
+            aws cloudformation deploy \
+              --template-file cloudformation/3_RDS_S3_v2.yml \
+              --stack-name Lec13-RDS
+
+  run_ansible_playbook:
+    docker:
+      - image: python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install Ansible
+          command: pip install ansible
+      - run:
+          name: Run Ansible Playbook
+          command: ansible-playbook -i /home/taemimizukura/GitHub/RaiseTech/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
 
 workflows:
-  raisetech:
+  build:
     jobs:
       - cfn-lint
+      - deploy_cloudformation:
+          requires: [cfn-lint]
+      - run_ansible_playbook:
+          requires: [deploy_cloudformation]
