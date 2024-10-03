@@ -38,7 +38,7 @@ jobs:
 
   run_ansible_playbook:
     docker:
-      - image: python:3.7
+      - image: python:3.8
     steps:
       - checkout
       - run:
@@ -46,7 +46,7 @@ jobs:
           command: pip install ansible
       - run:
           name: Run Ansible Playbook
-          command: ansible-playbook -i /home/taemimizukura/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
+          command: ansible-playbook -i /home/taemimizukura/GitHub/RaiseTech/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
 
 workflows:
   build:
