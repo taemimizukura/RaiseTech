@@ -1,58 +1,59 @@
 version: 2.1
+
 orbs:
-  python: circleci/python@2.1.1
-  aws-cli: circleci/aws-cli@5.1.0
+  aws-cli: circleci/aws-cli@4.2.3
+  ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@2.1.4
 
 jobs:
-  cfn-lint:
-    executor: python/default
+  execute-cloudformation:
+    executor: aws-cli/default
     steps:
       - checkout
-      - run: pip install cfn-lint
+      - aws-cli/setup:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          region: AWS_DEFAULT_REGION
       - run:
-          name: Run cfn-lint for CloudFormation
-          command: cfn-lint -i W3002 -t cloudformation/*.yml
-
-  deploy_cloudformation:
-    docker:
-      - image: python:3.7
-    steps:
-      - checkout
-      - aws-cli/setup
-      - run:
-          name: Deploy CloudFormation Stacks
+          name: Deploy to aws from template
           command: |
-            aws cloudformation deploy \
-              --template-file cloudformation/1_VPC_Network_EIP.yml \
-              --stack-name Lec13-VPC
+            set -x
+            aws cloudformation deploy --template-file cloudformation/1_VPC_Network_EIP.yml--stack-name Lec13-VPC
+            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB_EIP.yml.--stack-name Lec13-EC2--capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
+            aws cloudformation deploy --template-file cloudformation/3_RDS_S3_v2.yml--stack-name Lec13-RDS
 
-            aws cloudformation deploy \
-              --template-file cloudformation/2_EC2_ALB_EIP.yml \
-              --stack-name Lec13-EC2 \
-              --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
-
-            aws cloudformation deploy \
-              --template-file cloudformation/3_RDS_S3_v2.yml \
-              --stack-name Lec13-RDS
-
-  run_ansible_playbook:
-    docker:
-      - image: python:3.8
+  execute-ansible:
+    executor: ansible-playbook/default
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:39irZtiEGfD2EIvfGaLbkot5SYIsLxOso0Uv6v9BiIY"
+      - ansible-playbook/install:
+          version: 2.10.7
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
+  execute-serverspec:
+    executor: ruby/default
+    steps:
+      - checkout
+      - ruby/install:
+          version: 3.2.3
+      - ruby/install-deps:
+          app-dir: serverspec
       - run:
-          name: Install Ansible
-          command: pip install ansible
-      - run:
-          name: Run Ansible Playbook
-          command: ansible-playbook -i /home/taemimizukura/GitHub/RaiseTech/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
-
+          name: execute
+          command: |
+            cd serverspec
+            TARGET_HOST=57.180.213.93 bundle exec rspec
 workflows:
-  build:
+  workflow:
     jobs:
-      - cfn-lint
-      - deploy_cloudformation:
-          requires: [cfn-lint]
-      - run_ansible_playbook:
-          requires: [deploy_cloudformation]
+      - execute-cloudformation
+      - execute-ansible:
+          requires:
+            - execute-cloudformation
+      - execute-serverspec:
+          requires:
+            - execute-ansible

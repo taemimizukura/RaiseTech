@@ -1,8 +1,0 @@
----
-# vars file for myrole
-# CircleCIでセットした環境変数を取得
-ec2_ip: "{{ lookup('env', 'EC2_IP') }}"
-ssh_key_path: "{{ lookup('env', 'SSH_KEY_PATH') }}"
-db_user: "{{ lookup('env', 'DB_USER') }}"
-db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
-
