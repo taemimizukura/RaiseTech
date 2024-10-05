@@ -10,34 +10,15 @@ jobs:
       - checkout
       - run: pip install cfn-lint
       - run:
-          name: Deploy to aws from template
-          command: |
-            set -x
-            aws cloudformation deploy --template-file cloudformation/1_VPC_Network.yml--stack-name Lec13-VPC
-            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB.yml.--stack-name Lec13-EC2--capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
-            aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml--stack-name Lec13-RDS
+          name: Run cfn-lint for CloudFormation
+          command: cfn-lint -i W3002 -t cloudformation/*.yml
 
   deploy_cloudformation:
     docker:
       - image: python:3.7
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:GexUfnERzqL8QYP/ZQSvjJvbAkgtgh5bn/PfSzTo8Vw"
-      - ansible-playbook/install:
-          version: 2.10.7
-      - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
-  execute-serverspec:
-    executor: ruby/default
-    steps:
-      - checkout
-      - ruby/install:
-          version: 3.2.3
-      - ruby/install-deps:
-          app-dir: serverspec
+      - aws-cli/setup
       - run:
           name: Deploy CloudFormation Stacks
           command: |
