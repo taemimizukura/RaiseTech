@@ -18,9 +18,9 @@ jobs:
           name: Deploy to aws from template
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/1_VPC_Network_EIP.yml--stack-name Lec13-VPC
-            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB_EIP.yml.--stack-name Lec13-EC2--capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
-            aws cloudformation deploy --template-file cloudformation/3_RDS_S3_v2.yml--stack-name Lec13-RDS
+            aws cloudformation deploy --template-file cloudformation/1_VPC_Network.yml--stack-name Lec13-VPC
+            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB.yml.--stack-name Lec13-EC2--capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
+            aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml--stack-name Lec13-RDS
 
   execute-ansible:
     executor: ansible-playbook/default
@@ -28,7 +28,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:39irZtiEGfD2EIvfGaLbkot5SYIsLxOso0Uv6v9BiIY"
+            - "SHA256:GexUfnERzqL8QYP/ZQSvjJvbAkgtgh5bn/PfSzTo8Vw"
       - ansible-playbook/install:
           version: 2.10.7
       - ansible-playbook/playbook:
