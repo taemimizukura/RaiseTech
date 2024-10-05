@@ -164,7 +164,7 @@ Resources:
             Principal:
               Service: 'ec2.amazonaws.com'
             Action: 'sts:AssumeRole'
-      Policies:  # ここにポリシーを追加
+      Policies:
         - PolicyName: SecretsManagerAccessPolicy
           PolicyDocument:
             Version: '2012-10-17'
