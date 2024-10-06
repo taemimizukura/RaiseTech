@@ -1,9 +1,17 @@
 version: 2.1
-
 orbs:
-  aws-cli: circleci/aws-cli@4.2.3
-  ansible-playbook: orbss/ansible-playbook@0.0.5
-  ruby: circleci/ruby@2.1.4
+  python: circleci/python@2.1.1
+  aws-cli: circleci/aws-cli@5.1.0
+
+jobs:
+  cfn-lint:
+    executor: python/default
+    steps:
+      - checkout
+      - run: pip install cfn-lint
+      - run:
+          name: Run cfn-lint for CloudFormation
+          command: cfn-lint -i W3002 -t cloudformation/*.yml
 
 jobs:
   execute-cloudformation:
@@ -22,19 +30,19 @@ jobs:
             aws cloudformation deploy --template-file cloudformation/2_EC2_ALB.yml. --stack-name Lec13-EC2--capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
             aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml --stack-name Lec13-RDS
 
-  execute-ansible:
+execute-ansible:
     executor: ansible-playbook/default
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:jlGm9c9LijRGEdj8We+ozU0wfDeQTK7cK4GPVPvMwCA"
+            - "SHA256:39irZtiEGfD2EIvfGaLbkot5SYIsLxOso0Uv6v9BiIY"
       - ansible-playbook/install:
-          version:2.9.23
+          version: 2.10.7
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
           playbook-options: -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
-  execute-serverspec:
+execute-serverspec:
     executor: ruby/default
     steps:
       - checkout
@@ -46,7 +54,7 @@ jobs:
           name: execute
           command: |
             cd serverspec
-            rake spec 
+            TARGET_HOST=54.249.79.236 bundle exec rspec
 workflows:
   workflow:
     jobs:
