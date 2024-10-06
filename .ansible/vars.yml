@@ -1,4 +1,0 @@
----
-db_user: "{{ lookup('env', 'DB_USER') }}"
-db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
-ssh_key_path: "{{ lookup('env', 'SSH_KEY_PATH') }}"
