@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
+  python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@4.2.3
   ruby: circleci/ruby@2.1.4
-  ansible: circleci/ansible@2.9.23
 
 jobs:
   execute-cloudformation:
@@ -23,13 +23,13 @@ jobs:
             aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml --stack-name Lec13-RDS
 
   execute-ansible:
-    executor: ansible/default
+    executor: ansible-playbook/default
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "SHA256:jlGm9c9LijRGEdj8We+ozU0wfDeQTK7cK4GPVPvMwCA"
-      - ansible/install:
+      - ansible-playbook/install:
           version:2.9.23
       - run:
           name: ansible/playbook.yml
