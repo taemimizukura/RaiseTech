@@ -31,9 +31,10 @@ jobs:
             - "SHA256:jlGm9c9LijRGEdj8We+ozU0wfDeQTK7cK4GPVPvMwCA"
       - ansible/install:
           version:2.9.23
-      - ansible/run:
-          playbook: ansible/playbook.yml
-          playbook-options: -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
+      - run:
+          name: ansible/playbook.yml
+          command: |
+            ansible-playbook ansible/playbook.yml -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
   execute-serverspec:
     executor: ruby/default
     steps:
