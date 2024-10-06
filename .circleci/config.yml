@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@4.2.3
+  ansible-playbook: orbss/ansible-playbook@0.0.5
   ruby: circleci/ruby@2.1.4
 
 jobs:
@@ -31,10 +31,9 @@ jobs:
             - "SHA256:jlGm9c9LijRGEdj8We+ozU0wfDeQTK7cK4GPVPvMwCA"
       - ansible-playbook/install:
           version:2.9.23
-      - run:
-          name: ansible/playbook.yml
-          command: |
-            ansible-playbook ansible/playbook.yml -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: -u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa
   execute-serverspec:
     executor: ruby/default
     steps:
