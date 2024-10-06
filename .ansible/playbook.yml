@@ -1,0 +1,106 @@
+---
+- hosts: target_ec2
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install git
+      yum:
+        name: git
+        state: present
+        lock_timeout: 180
+
+    - name: Clone the repository
+      git:
+        repo: 'https://github.com/yuta-ushijima/raisetech-live8-sample-app.git'
+        dest: '/home/ec2-user/raisetech-live8-sample-app/'
+
+    - name: Install required packages
+      yum:
+        name:
+          - gcc
+          - make
+          - patch
+          - readline-devel
+          - zlib-devel
+          - bzip2-devel
+          - libffi-devel
+          - openssl-devel
+          - libyaml-devel
+          - ImageMagick
+        state: present
+
+    - name: Clone rbenv repository
+      git:
+        repo: 'https://github.com/rbenv/rbenv.git'
+        dest: '/home/ec2-user/.rbenv'
+        update: yes
+
+    - name: Clone ruby-build repository
+      git:
+        repo: 'https://github.com/rbenv/ruby-build.git'
+        dest: '/home/ec2-user/.rbenv/plugins/ruby-build'
+        update: yes
+
+    - name: Add rbenv to PATH in .bashrc
+      lineinfile:
+        path: ~/.bashrc
+        line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+        state: present
+
+    - name: Load rbenv in the current shell
+      shell: |
+        export PATH="$HOME/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        rbenv versions --bare
+      register: rbenv_versions
+      ignore_errors: yes
+
+    - name: Install Ruby 3.2.3 using rbenv
+      shell: |
+        export PATH="$HOME/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        rbenv install 3.2.3
+      args:
+        executable: /bin/bash
+      when: "'3.2.3' not in rbenv_versions.stdout"
+
+    - name: Set Ruby global version to 3.2.3 using rbenv
+      shell: |
+        export PATH="$HOME/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        rbenv global 3.2.3
+      args:
+        executable: /bin/bash
+
+    - name: Install Bundler using rbenv
+      shell: |
+        export PATH="$HOME/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        /home/ec2-user/.rbenv/shims/gem install bundler
+      args:
+        executable: /bin/bash
+
+    - name: Bundle install
+      command: /home/ec2-user/.rbenv/shims/bundle install
+      args:
+        chdir: '/home/ec2-user/raisetech-live8-sample-app/'
+
+    - name: Verify rbenv and ruby-build installation
+      shell: |
+        export PATH="/home/ec2-user/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        /home/ec2-user/.rbenv/bin/rbenv --version
+      args:
+        executable: /bin/bash
+
+    - name: Run sample-app setup
+      command: /home/ec2-user/raisetech-live8-sample-app/bin/setup
+      args:
+        chdir: '/home/ec2-user/raisetech-live8-sample-app/'
+
+    - name: Start sample-app dev
+      command: /home/ec2-user/raisetech-live8-sample-app/bin/dev
+      args:
+        chdir: '/home/ec2-user/raisetech-live8-sample-app/'
+
