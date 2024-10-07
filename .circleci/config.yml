@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@4.2.3
   ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@2.1.4
 
 jobs:
   execute-cloudformation:
@@ -33,7 +34,20 @@ jobs:
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
           playbook-options: -u ec2user -i ansible/inventiry --private-key ~/ .ssh/id_rsa
-            
+  execute-serverspec:
+    executor: ruby/default
+    steps:
+      - checkout
+      - ruby/install:
+          version: 3.2.3
+      - ruby/install-deps:
+          app-dir: serverspec
+      - run:
+          name: execute
+          command: |
+            cd serverspec
+            TARGET_HOST=54.150.159.229 bundle exec rspec
+
 workflows:
   workflow:
     jobs:
@@ -41,5 +55,7 @@ workflows:
       - execute-ansible:
           requires:
             - execute-cloudformation
-
+      - execute-serverspec:
+          requires:
+            - execute-ansible
 
