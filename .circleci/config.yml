@@ -29,8 +29,11 @@ jobs:
           fingerprints:
             - "SHA256:GexUfnERzqL8QYP/ZQSvjJvbAkgtgh5bn/PfSzTo8Vw"
       - ansible-playbook/install:
-          version: 2.16.7
-
+          version: 2.10.7
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: -u ec2user -i ansible/inventiry --private-key ~/ .ssh/id_rsa
+            
 workflows:
   workflow:
     jobs:
@@ -38,4 +41,5 @@ workflows:
       - execute-ansible:
           requires:
             - execute-cloudformation
+
 
