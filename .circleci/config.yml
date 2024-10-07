@@ -1,5 +1,35 @@
 version: 2.1
+
 orbs:
+  aws-cli: circleci/aws-cli@4.2.3
+  ansible-playbook: orbss/ansible-playbook@0.0.5
+
+jobs:
+  execute-cloudformation:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}      
+          region: ${AWS_DEFAULT_REGION}   
+      - run:
+          name: Deploy to aws from template
+          command: |
+            set -x
+            aws cloudformation deploy --template-file cloudformation/1_VPC_Network.yml --stack-name Lec13-VPC
+            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB.yml --stack-name Lec13-EC2 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
+            aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml --stack-name Lec13-RDS 
+
+  execute-ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:GexUfnERzqL8QYP/ZQSvjJvbAkgtgh5bn/PfSzTo8Vw"
+      - ansible-playbook/install:
+          version: 2.16.7
   python: circleci/python@2.1.1
   aws-cli: circleci/aws-cli@5.1.0
 
@@ -49,10 +79,10 @@ jobs:
           command: ansible-playbook -i /home/taemimizukura/GitHub/RaiseTech/.ansible/hosts.ini /home/taemimizukura/GitHub/RaiseTech/.ansible/myrole/tasks/main.yml
 
 workflows:
-  build:
+  workflow:
     jobs:
-      - cfn-lint
-      - deploy_cloudformation:
-          requires: [cfn-lint]
-      - run_ansible_playbook:
-          requires: [deploy_cloudformation]
+      - execute-cloudformation
+      - execute-ansible:
+          requires:
+            - execute-cloudformation
+
