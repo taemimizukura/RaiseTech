@@ -129,3 +129,5 @@ known_hostsファイルから指定のホストの公開鍵情報を削除する
 
 ### Ansibleディレクトリ構成  
 ![ansible](image/lecture13/img-01.png)  
+
+
