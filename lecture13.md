@@ -1,6 +1,8 @@
 # Lecture13
 # CircleCI のサンプルに Serverspec や Ansible の処理を追加してください。  
 ## 以下の①～④の工程をCircleCIで自動化しました。  
+実行用リポジトリ  
+[circleci_lecture13](https://github.com/taemimizukura/circleci_lecture13)  
 ① CloudFormationの構文チェック  
 ② CloudFormationスタック実行（EC2、ALB、RDS、S3追加）  
 ③ AnsibleでターゲットノードのEC2にサンプルアプリケーションの動作環境構築   
