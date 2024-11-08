@@ -17,7 +17,7 @@ jobs:
 
       # cloudformation_old フォルダのチェック
       - run:
-          name: run cfn-lint for cloudformation_old
+          name: run cfn-lint for old_cloudformation
           command: |
             cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
 
@@ -25,10 +25,3 @@ workflows:
   raisetech:
     jobs:
       - cfn-lint
-
-
-
-
-
-
-
