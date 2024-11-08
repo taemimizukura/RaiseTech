@@ -11,7 +11,7 @@
 【Lecture10】9月2日　CloudFormationで現在までの環境を自動化する。  
 【Lecture11】9月22日　ServerSpecを使用したテストの実行  
 【Lecture12】9月25日　CircleCI のサンプルコンフィグが正しく動作するようにリポジトリに組み込む。  
-【Lecture13】  
+【Lecture13】11月6日　CircleCIに ServerspecやAnsible の処理を追加しサンプルアプリケーションの動作環境の構築、テスト自動化。  
 【Lecture14】  
 【Lecture15】  
 【Lecture16】  
