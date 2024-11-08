@@ -1,61 +1,27 @@
 version: 2.1
-
 orbs:
-  aws-cli: circleci/aws-cli@4.2.3
-  ansible-playbook: orbss/ansible-playbook@0.0.5
-  ruby: circleci/ruby@2.1.4
+  python: circleci/python@2.0.3
 
 jobs:
-  execute-cloudformation:
-    executor: aws-cli/default
+  cfn-lint:
+    executor: python/default
     steps:
       - checkout
-      - aws-cli/setup:
-          aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-          aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}      
-          region: ${AWS_DEFAULT_REGION}   
-      - run:
-          name: Deploy to aws from template
-          command: |
-            set -x
-            aws cloudformation deploy --template-file cloudformation/1_VPC_Network.yml --stack-name Lec13-VPC
-            aws cloudformation deploy --template-file cloudformation/2_EC2_ALB.yml --stack-name Lec13-EC2 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides MyKeyPair=${MY_KEY_PAIR} MyIP=${MY_IP}
-            aws cloudformation deploy --template-file cloudformation/3_RDS_S3.yml --stack-name Lec13-RDS 
+      - run: pip install cfn-lint
 
-  execute-ansible:
-    executor: ansible-playbook/default
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:GexUfnERzqL8QYP/ZQSvjJvbAkgtgh5bn/PfSzTo8Vw"
-      - ansible-playbook/install:
-          version: 2.10.7
-      - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: -u ec2user -i ansible/inventiry --private-key ~/ .ssh/id_rsa
-  execute-serverspec:
-    executor: ruby/default
-    steps:
-      - checkout
-      - ruby/install:
-          version: 3.2.3
-      - ruby/install-deps:
-          app-dir: serverspec
+      # cloudformation フォルダのチェック
       - run:
-          name: execute
+          name: run cfn-lint for cloudformation
           command: |
-            cd serverspec
-            TARGET_HOST=54.150.159.229 bundle exec rspec
+            cfn-lint -i W3002 -t cloudformation/*.yml
+
+      # cloudformation_old フォルダのチェック
+      - run:
+          name: run cfn-lint for old_cloudformation
+          command: |
+            cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
 
 workflows:
-  workflow:
+  raisetech:
     jobs:
-      - execute-cloudformation
-      - execute-ansible:
-          requires:
-            - execute-cloudformation
-      - execute-serverspec:
-          requires:
-            - execute-ansible
-
+      - cfn-lint

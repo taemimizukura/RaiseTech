@@ -1,13 +1,38 @@
-require 'serverspec'
+# frozen_string_literal: true
 
-set :backend, :ssh
+# This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'spec_helper'
 
-set :host, 'ec2-54-150-159-229.ap-northeast-1.compute.amazonaws.com'
-set :ssh_options, {
-  user: 'ec2-user',
-  keys: [ENV['SSH_KEY_PATH']],
-  forward_agent: true,
-  auth_methods: %w(publickey)
-}
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../config/environment', __dir__)
 
-set :app_directory, '/home/ec2-user/raisetech-live8-sample-app'
+# Prevent database truncation if the environment is production
+abort('The Rails environment is running in production mode!') if Rails.env.production?
+
+# Setup all the directories for spec files
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+# Run all migrations before tests
+ActiveRecord::Migration.maintain_test_schema!
+
+# Configure RSpec
+RSpec.configure do |config|
+  # Enables expectations in RSpec
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+
+  # Enables mocks in RSpec
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+  end
+
+  # Show the test result on screen (and in CI logs) with the format you prefer
+  config.formatter = :documentation
+
+  # The next line ensures that tests are run in random order to expose order dependencies.
+  config.order = :random
+
+  # Seed for random order of tests
+  Kernel.srand config.seed
+end
