@@ -1,5 +1,5 @@
 # RaiseTech AWSフルコース 2024年1月～
-| 【課題】 提出日付         |概要                                  |提出ファイル                               |
+|【課題】 提出日         |概要                                  |提出ファイル                               |
 |-----------------------|------------------------------------------|--------------------------------|
 【Lecture01】1/18|AWSアカウント作成、IAM推奨設定、Cloud9作成|Discord上で提出|
 【Lecture02】1/22|**GitHubアカウント作成**、Cloud9からGitHubへpush、プルリクエスト作成| [lecture02.md](https://github.com/taemimizukura/RaiseTech/blob/main/lecture02.md)  
