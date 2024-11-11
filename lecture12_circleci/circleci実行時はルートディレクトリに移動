@@ -1,0 +1,4 @@
+circleci実行時は、以下のフォルダをリポジトリのルートディレクトリに移動してからpushする。
+C:\Users\tmoct\OneDrive\ドキュメント\VSCode\RaiseTech\lecture12_circleci\.circleci
+C:\Users\tmoct\OneDrive\ドキュメント\VSCode\RaiseTech\lecture12_circleci\cloudformation
+C:\Users\tmoct\OneDrive\ドキュメント\VSCode\RaiseTech\lecture12_circleci\cloudformation_old

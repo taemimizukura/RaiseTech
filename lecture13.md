@@ -1,14 +1,15 @@
 # Lecture13
 【課題】CircleCI のサンプルに Serverspec や Ansible の処理を追加してください。  
+
+## 実行用リポジトリ　　[circleci_lecture13](https://github.com/taemimizukura/circleci_lecture13)  
 ## 以下の①～④の工程をCircleCIで自動化しました。  
-実行用リポジトリ　　[circleci_lecture13](https://github.com/taemimizukura/circleci_lecture13)  
 ① CloudFormationの構文チェック  
 ② CloudFormationスタック実行（EC2、ALB、RDS、S3追加）  
 ③ AnsibleでターゲットノードのEC2にサンプルアプリケーションの動作環境構築   
 ④ Serverspecでターゲットノードの環境をテストする  
-【環境】  
+## 環境  
 コントロールノードとターゲットノードの両方に、Amazon Linux2をOSとするEC2インスタンスを使用  
-【実行方法】  
+## 実行方法  
 GitHubにpushすることで、①～④の処理が自動実行される。
 ## １．自動化準備
 ### ■ コントロールノードの作成とセットアップ
@@ -126,6 +127,6 @@ known_hostsファイルから指定のホストの公開鍵情報を削除する
 **known_hosts**--- 接続先ホストの公開鍵が保存される（初回接続時にファイルが生成される）  
 ※ fingerperint--- 公開鍵を識別するための短い文字列（初回接続時に表示される）
 ```ssh-keygen -lf ~/.ssh/id_rsa.pub```で表示することもできる。
-
+### 構成図はこちらです　[AWS自動化構成図](lecture14.md)
 ### Ansibleディレクトリ構成  
 ![ansible](image/lecture13/img-01.png)  
