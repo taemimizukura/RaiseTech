@@ -12,7 +12,7 @@
 9 ||LiveCodingのみ　※課題なし| ー
 10 |9/2|CloudFormationで現在までの環境をコード化して実行する。|[lecture10.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur10.md)  
 11 |9/22|ServerSpecを使用したテストの実行|[lecture11.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur11.md)|  
-12 |9/25|CircleCI のサンプルコンフィグが正しく動作するようにリポジトリに組み込む。|[lecture12.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur12.md)|[lecture12_syntaxfix.md](https://github.com/taemimizukura/RaiseTech/blob/main/lecture12_syntaxfix.md)  
+12 |9/25|CircleCI のサンプルコンフィグが正しく動作するようにリポジトリに組み込む。|[lecture12.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur12.md) [lecture12_syntaxfix.md](https://github.com/taemimizukura/RaiseTech/blob/main/lecture12_syntaxfix.md)|  
 13 |11/6|CircleCIに ServerspecやAnsible の処理を追加しサンプルアプリケーションの動作環境の構築、テスト自動化。|[lecture13.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur13.md)  
 14 |11/11|自動化処理のAWS構成図を作成。|[lecture14.md](https://github.com/taemimizukura/RaiseTech/blob/main/lectur14.md)  
 15 ||LiveCoding（Ansible〜CircleCI）※課題なし| ー
