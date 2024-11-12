@@ -4,13 +4,13 @@
 [lecture13.md](https://github.com/taemimizukura/RaiseTech/blob/main/lecture13.md)　作業概要と実行結果のまとめ  
 
 コントロールノード、ターゲットノードともにAmazon Linux2をOSとするEC2インスタンスを使用しています。  
-SSH接続したコントロールノードからGitHubへpushすることで、  
-CloudFormationスタックの構文チェック（cfn-lint）、  
-CloudFormationでのリソース作成（execute-cloudformation）、  
-AnsibleによるEC2へのRailsアプリケーションの動作環境構築（execute-ansible）、  
-ServerspecによるEC2環境のテスト（execute-serverspec）が自動実行されます。
-![構成図](image/lecture14/img-01_.drawio.png)
+SSH接続したコントロールノードからGitHubへpushすることで以下の処理が自動実行されます。
+- CloudFormationスタックの構文チェック（cfn-lint）  
+- CloudFormationでのリソース作成（execute-cloudformation）  
+- AnsibleによるEC2へのRailsアプリケーションの動作環境構築（execute-ansible）  
+- ServerspecによるEC2環境のテスト（execute-serverspec）  
 
+![構成図](image/lecture14/img-01_.drawio.png)
 
 ## 感想
 構成図に起こすことで自分の作業内容の理解が深まりました。
