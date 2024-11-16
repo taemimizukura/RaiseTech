@@ -1,12 +1,16 @@
-RaiseTech（エンジニアに必要な自走力を身に付けるオンラインエンジニアリングスクール）のAWSフルコースを受講し、学習した記録です。  
-2024年1月10日に受講を開始し、主に就業後の平日夜と土日を活用して学習しました。  
-AWSとGitHubに初めて触れるところから始め、最終課題ではCircleCIを使ってCI/CDパイプラインを構築し、インフラ環境の自動化とテストの自動実行までを行いました。  
+# このリポジトリについて
+RaiseTech（エンジニア育成オンラインスクール）のAWSフルコースを受講し、学習した記録です。  
+- 開始日：2024年1月10日
+- 学習時間：主に就業後の平日夜と土日
+- 学習内容：AWSとGitHubに初めて触れるところから始め、最終課題ではCircleCIを使ってCI/CDパイプラインを構築し、インフラ環境の自動化とテストの自動実行までを行いました。  
+
 【最終課題】第13回　課題実行リポジトリ  
-[circleci_lecture13](https://github.com/taemimizukura/circleci_lecture13)（IP固定）  
-[circleci-dynamic-ip](https://github.com/taemimizukura/circleci-dynamic-ip)（動的IP取得）  
-構成図
+- [circleci_lecture13](https://github.com/taemimizukura/circleci_lecture13)（IP固定）  
+- [circleci-dynamic-ip](https://github.com/taemimizukura/circleci-dynamic-ip)（動的IP取得）  
+# 構成図
 ![構成図](image/lecture14/img-01_.drawio.png)
 
+# 課題情報一覧
 |課題|提出日|概要|提出ファイル|
 |----|------|-------------------------|--------------|
 1 |1/18|AWSアカウント作成、rootユーザーとIAMユーザーをMFAで保護、権限付与、Cloud9作成|Discord上で提出|
