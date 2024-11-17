@@ -2,9 +2,9 @@
 ## CloudFormationを利用して、現在までに作った環境をコード化する
 
 ### コード化したyml形式のスタックファイル
-- [1_VPC_Network.yml](/1_VPC_Network.yml)  
-- [2_EC2_ALB.yml](/2_EC2_ALB.yml)  
-- [3_RDS_S3.yml](/3_RDS_S3.yml)  　　
+- [1_VPC_Network.yml](https://github.com/taemimizukura/RaiseTech/blob/main/cloudformation_old/1_VPC_Network.yml)  
+- [2_EC2_ALB.yml](https://github.com/taemimizukura/RaiseTech/blob/main/cloudformation_old/2_EC2_ALB.yml)  
+- [3_RDS_S3.yml](https://github.com/taemimizukura/RaiseTech/blob/main/cloudformation_old/3_RDS_S3.yml)  　　
 
 ### CloudFormationスタックのデプロイ結果
 ![スタック](image/lecture10/img-00.png)

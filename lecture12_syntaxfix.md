@@ -1,5 +1,5 @@
 # Lecture12 追加修正分提出
-circleCIで警告が出ていたCloudformationのスタックの構文を修正し、再度CircleCIを実行しました。 
+CircleCIで警告が出ていたCloudFormationのスタックの構文を修正し、再度CircleCIを実行しました。 
 ## 修正した警告箇所  
 1. W3010 AvailabilityZoneのハードコーディングを避ける  
 Fn::GetAZs＝指定したリージョンのAvailabilityZoneをすべて返す  
@@ -28,7 +28,7 @@ AccessControlは古いので使わない
 - aws-cn：中国（北京、寧夏）で運営されるAWSサービス用のパーティションです。中国本土では特別な法律や規制があるため、専用のインフラストラクチャが必要です。
 - aws-us-gov：米国政府向けに設計されたパーティションで、政府関連のサービスやデータに特化しています。セキュリティやコンプライアンスが強化されています。
 
-## 修正したCloudfornationスタックをインポート
+## 修正したCloudFormationスタックをインポート
 ![スタック](image/lecture12/img-08.png)
 ## EC2に接続確認
 作成されたEC2  
@@ -36,7 +36,7 @@ AccessControlは古いので使わない
 EC2へ接続  
 ![EC2へ接続](image/lecture12/img-10.png)
 
-## circleCIでチェック
+## CircleCIでチェック
 .circleci/config.yml を以下のように書き換え
 ```yml
 version: 2.1
@@ -58,7 +58,7 @@ jobs:
 
       # cloudformation_old フォルダのチェック
       - run:
-          name: run cfn-lint for old_cloudformation
+          name: run cfn-lint for cloudformation_old
           command: |
             cfn-lint -i W3002 -i W1011 -i W3010 -i W3045 -t cloudformation_old/*.yml
 
